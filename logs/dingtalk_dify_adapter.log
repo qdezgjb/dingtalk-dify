@@ -102,3 +102,5 @@ Traceback (most recent call last):
 ZeroDivisionError: division by zero
 2025-08-02 15:24:02 [CRITICAL] dingtalk_dify_adapter: 这是一条严重错误信息，带有高亮背景 [test_logger:24]
 2025-08-02 15:31:46 [INFO    ] dingtalk_dify_adapter: 成功加载配置文件: config.json
+2025-08-04 10:53:07 [INFO    ] dingtalk_dify_adapter: 成功从环境变量加载配置
+2025-08-04 10:54:24 [INFO    ] dingtalk_dify_adapter: 成功从环境变量加载配置

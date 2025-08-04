@@ -1,10 +1,20 @@
 import time
 import requests
+import ssl
 from typing import Dict, Any
 import urllib3
+import certifi
+from requests.adapters import HTTPAdapter
 
 # 禁用SSL警告
 urllib3.disable_warnings()
+
+# 创建一个完全不验证的SSL上下文
+def create_custom_ssl_context():
+    context = ssl.create_default_context()
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_NONE
+    return context
 
 class DingTalkAuth:
     def __init__(self, client_id: str, client_secret: str):
@@ -29,17 +39,44 @@ class DingTalkAuth:
         }
         
         try:
-            # 添加重试机制和禁用SSL验证
-            for retry in range(3):  # 最多重试3次
+            # 创建一个会话对象并设置自定义SSL上下文
+            session = requests.Session()
+            # 完全关闭验证
+            session.verify = False
+            # 设置超时时间
+            timeout = 30
+            
+            # 优化连接设置
+            adapter = requests.adapters.HTTPAdapter(
+                pool_connections=5,  # 连接池连接数
+                pool_maxsize=5,      # 连接池最大连接数
+                max_retries=5,        # 最大重试次数
+                pool_block=False      # 连接池用尽时不阻塞
+            )
+            session.mount('http://', adapter)
+            session.mount('https://', adapter)
+            
+            # 适配各种网络环境的请求头
+            headers = {
+                "Content-Type": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36",
+                "Accept": "*/*",
+                "Connection": "close"
+            }
+            
+            # 添加重试机制
+            for retry in range(5):  # 增加重试次数到5次
                 try:
-                    # 禁用SSL验证
-                    response = requests.post(url, json=data, verify=False, timeout=30)
+                    # 使用会话对象进行请求
+                    response = session.post(url, json=data, headers=headers, timeout=timeout)
                     if response.status_code == 200:
                         break
-                except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as e:
-                    if retry == 2:  # 最后一次重试
-                        raise Exception(f"获取钉钉访问令牌失败(SSL/连接错误): {str(e)}")
-                    time.sleep(1)  # 等待1秒后重试
+                except Exception as e:
+                    error = f"获取访问令牌失败 (重试 {retry+1}/5): {str(e)}"
+                    print(error)
+                    if retry == 4:  # 最后一次重试
+                        raise Exception(f"获取钉钉访问令牌失败(所有重试失败): {str(e)}")
+                    time.sleep(2)  # 增加重试间隔
             
             if response.status_code != 200:
                 raise Exception(f"获取钉钉访问令牌失败: {response.text}")
