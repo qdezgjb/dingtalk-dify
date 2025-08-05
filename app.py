@@ -47,6 +47,25 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 sys.path.append(os.path.join(current_dir, 'dingtalk-stream-sdk-python-main'))
 
+# 服务器环境检测和配置
+def is_server_environment():
+    """检测是否为服务器环境"""
+    return os.environ.get('SERVER_ENV', 'false').lower() == 'true'
+
+def setup_server_environment():
+    """设置服务器环境配置"""
+    if is_server_environment():
+        # 设置更长的超时时间
+        os.environ.setdefault('REQUESTS_TIMEOUT', '60')
+        # 设置更大的文件上传限制
+        os.environ.setdefault('MAX_FILE_SIZE', '100MB')
+        # 启用详细日志
+        os.environ.setdefault('LOG_LEVEL', 'INFO')
+        print("检测到服务器环境，已应用服务器配置")
+
+# 初始化服务器环境
+setup_server_environment()
+
 # 导入钉钉流式SDK
 import dingtalk_stream
 from dingtalk_stream import DingTalkStreamClient, Credential, ChatbotMessage, AckMessage, AICardReplier
@@ -491,28 +510,18 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
                     file_id = file_info.get('fileId', '')
                     space_id = file_info.get('spaceId', '')
                     
-                    # 根据钉钉文档，使用downloadCode构建下载URL
-                    if download_code:
-                        file_url = self._build_download_url(download_code, file_id, space_id)
-                    else:
-                        file_url = ''
-                    
                     file_type = self._get_file_type(file_name)
                 else:
                     # 如果不是字典，尝试其他方式解析
                     file_name = str(file_info) if file_info else '未知文件'
                     file_size = 0
-                    file_url = ''
                     file_type = '未知类型'
                 
-                self.logger.info(f"文件信息: 名称={file_name}, 大小={file_size}, 类型={file_type}, URL={file_url}")
+                self.logger.info(f"文件信息: 名称={file_name}, 大小={file_size}, 类型={file_type}")
                 
-                # 如果文件URL为空，尝试从钉钉API获取文件下载地址
-                if not file_url:
-                    self.logger.warning("文件URL为空，尝试从钉钉API获取文件信息")
-                    # 这里可以调用钉钉API获取文件信息
-                    # 暂时使用默认处理
-                    file_url = self._get_file_download_url(incoming_message)
+                # 直接使用Storage API获取文件下载地址
+                self.logger.info("使用钉钉Storage API获取文件下载信息")
+                file_url = self._get_file_download_url(incoming_message)
                 
                 if file_url:
                     # 上传文件到Dify
@@ -568,37 +577,7 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
             self.logger.error(f"处理文件消息异常: {str(e)}")
             self.reply_text("文件处理时发生错误，请重试", incoming_message)
     
-    def _build_download_url(self, download_code: str, file_id: str, space_id: str) -> str:
-        """根据钉钉文件信息构建下载URL"""
-        try:
-            # 根据钉钉文档，尝试不同的API路径
-            # 钉钉文件下载可能有多种方式，我们需要尝试不同的API
-            
-            # 方法1：使用文件ID下载
-            if file_id:
-                download_url = f"https://api.dingtalk.com/v1.0/robot/media/download?fileId={file_id}"
-                self.logger.info(f"尝试使用fileId下载: {download_url}")
-                return download_url
-            
-            # 方法2：使用downloadCode下载（原始方法）
-            elif download_code:
-                download_url = f"https://api.dingtalk.com/v1.0/robot/media/download?downloadCode={download_code}"
-                self.logger.info(f"尝试使用downloadCode下载: {download_url}")
-                return download_url
-            
-            # 方法3：使用spaceId和fileId组合
-            elif space_id and file_id:
-                download_url = f"https://api.dingtalk.com/v1.0/robot/media/download?spaceId={space_id}&fileId={file_id}"
-                self.logger.info(f"尝试使用spaceId和fileId下载: {download_url}")
-                return download_url
-            
-            else:
-                self.logger.error("无法构建下载URL，缺少必要参数")
-                return ""
-                
-        except Exception as e:
-            self.logger.error(f"构建下载URL失败: {str(e)}")
-            return ""
+
     
     def _get_file_type(self, file_name: str) -> str:
         """根据文件名获取文件类型"""
@@ -633,43 +612,252 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
     def _get_file_download_url(self, incoming_message: ChatbotMessage) -> str:
         """从钉钉API获取文件下载地址"""
         try:
-            # 根据钉钉文档：https://open.dingtalk.com/document/isvapp/upload-media-files
-            # 需要先获取文件的mediaId，然后调用下载API
+            # 从消息中提取文件信息
+            file_id = None
+            space_id = None
+            union_id = None
             
-            # 从消息中提取mediaId
-            media_id = None
-            
-            # 检查extensions中是否有mediaId
+            # 从extensions的content字段中提取文件信息
             if hasattr(incoming_message, 'extensions') and incoming_message.extensions:
+                self.logger.info(f"消息extensions内容: {incoming_message.extensions}")
                 for key, value in incoming_message.extensions.items():
-                    if 'media' in key.lower() or 'id' in key.lower():
-                        if isinstance(value, dict) and 'id' in value:
-                            media_id = value.get('id')
-                        elif isinstance(value, str):
-                            media_id = value
+                    self.logger.info(f"检查扩展字段: {key} = {value}")
+                    if key == 'content' and isinstance(value, dict):
+                        # 从content字段中提取文件信息
+                        file_id = value.get('fileId')
+                        space_id = value.get('spaceId')
+                        self.logger.info(f"从extensions.content中提取文件信息: fileId={file_id}, spaceId={space_id}")
                         break
+                    elif isinstance(value, dict):
+                        # 备用：从其他字典字段中提取
+                        file_id = value.get('fileId') or value.get('id')
+                        space_id = value.get('spaceId') or value.get('space_id')
+                        if file_id and space_id:
+                            self.logger.info(f"从extensions.{key}中提取文件信息: fileId={file_id}, spaceId={space_id}")
+                            break
             
-            # 如果没有找到mediaId，尝试从其他字段获取
-            if not media_id:
-                # 检查消息的其他属性
-                message_data = incoming_message.__dict__
-                for key, value in message_data.items():
-                    if 'media' in key.lower() and value:
-                        media_id = value
-                        break
+            # 只使用旧版SDK获取unionId
+            union_id = None
+            if hasattr(incoming_message, 'sender_staff_id'):
+                try:
+                    # 根据钉钉官方文档：https://open.dingtalk.com/document/orgapp/obtain-the-userid-of-a-user-by-using-the-log-free
+                    # 使用旧版taobao SDK获取unionId
+                    from dingtalk.old_sdk_client import get_union_id_with_old_sdk
+                    client_id = os.environ.get("DINGTALK_CLIENT_ID")
+                    client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
+                    
+                    if client_id and client_secret:
+                        self.logger.info("使用旧版SDK获取unionId")
+                        union_id = get_union_id_with_old_sdk(
+                            incoming_message.sender_staff_id, 
+                            client_id, 
+                            client_secret
+                        )
+                        if union_id:
+                            self.logger.info(f"使用旧版SDK获取到unionId: {union_id}")
+                        else:
+                            self.logger.error("旧版SDK获取unionId失败")
+                    else:
+                        self.logger.error("钉钉配置不完整，无法获取unionId")
+                except Exception as e:
+                    self.logger.error(f"获取用户unionId失败: {str(e)}")
             
-            if media_id:
-                self.logger.info(f"找到文件mediaId: {media_id}")
-                # 构建下载URL
-                # 根据钉钉API文档，下载URL格式为：/v1.0/robot/media/download?mediaId={mediaId}
-                download_url = f"https://api.dingtalk.com/v1.0/robot/media/download?mediaId={media_id}"
-                return download_url
-            else:
-                self.logger.warning("未找到文件mediaId")
+            # 如果没有sender_staff_id或获取失败，则无法继续
+            if not union_id:
+                self.logger.error("无法获取unionId，无法调用Storage API")
                 return ""
             
+            self.logger.info(f"最终使用的unionId: {union_id}")
+            
+            if not file_id or not space_id:
+                self.logger.error("未找到必要的文件信息: fileId 或 spaceId")
+                return ""
+            
+            self.logger.info(f"找到文件信息: fileId={file_id}, spaceId={space_id}")
+            
+            # 使用钉钉Storage API获取下载信息
+            try:
+                from dingtalk.auth import DingTalkAuth
+                from alibabacloud_tea_openapi import models as open_api_models
+                from alibabacloud_tea_util import models as util_models
+                from alibabacloud_tea_util.client import Client as UtilClient
+                
+                # 尝试导入钉钉Storage SDK
+                try:
+                    from alibabacloud_dingtalk.storage_1_0.client import Client as dingtalkstorage_1_0Client
+                    from alibabacloud_dingtalk.storage_1_0 import models as dingtalkstorage__1__0_models
+                    storage_sdk_available = True
+                    self.logger.info("钉钉Storage SDK导入成功")
+                except ImportError as e:
+                    self.logger.error(f"钉钉Storage SDK导入失败: {str(e)}")
+                    # 在服务器环境下，提供更详细的安装指导
+                    if is_server_environment():
+                        self.logger.error("服务器环境检测到SDK缺失，请执行以下步骤:")
+                        self.logger.error("1. 确保已安装: pip install alibabacloud-dingtalk")
+                        self.logger.error("2. 检查Python路径: python -c 'import alibabacloud_dingtalk'")
+                        self.logger.error("3. 如果仍有问题，请检查服务器网络连接")
+                    else:
+                        self.logger.error("请安装钉钉Storage SDK:")
+                        self.logger.error("pip install alibabacloud-dingtalk")
+                    return ""
+                
+                # 获取访问令牌
+                client_id = os.environ.get("DINGTALK_CLIENT_ID")
+                client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
+                
+                if not client_id or not client_secret:
+                    self.logger.error("钉钉配置不完整")
+                    return ""
+                
+                auth = DingTalkAuth(client_id, client_secret)
+                access_token = auth.get_access_token()
+                
+                if not access_token:
+                    self.logger.error("无法获取钉钉访问令牌")
+                    return ""
+                
+                # 创建Storage客户端
+                config = open_api_models.Config()
+                config.protocol = 'https'
+                config.region_id = 'central'
+                client = dingtalkstorage_1_0Client(config)
+                
+                # 设置请求头
+                get_file_download_info_headers = dingtalkstorage__1__0_models.GetFileDownloadInfoHeaders()
+                get_file_download_info_headers.x_acs_dingtalk_access_token = access_token
+                
+                # 设置请求选项
+                option = dingtalkstorage__1__0_models.GetFileDownloadInfoRequestOption(
+                    version=1,
+                    prefer_intranet=False
+                )
+                
+                # 设置请求参数 - 根据钉钉官方文档，unionId是必需的
+                if not union_id:
+                    self.logger.error("未找到unionId，无法调用Storage API")
+                    return ""
+                
+                self.logger.info(f"使用unionId调用Storage API: {union_id}")
+                
+                # 根据钉钉官方文档，创建正确的请求对象
+                # 注意：unionId应该是用户的真实unionId，不是默认值
+                get_file_download_info_request = dingtalkstorage__1__0_models.GetFileDownloadInfoRequest()
+                get_file_download_info_request.union_id = union_id
+                get_file_download_info_request.option = option
+                
+                # 验证unionId格式
+                if union_id == "default_union_id":
+                    self.logger.error("unionId是默认值，这可能导致API调用失败")
+                    return ""
+                
+                # 调用API获取下载信息 - 严格按照官方代码
+                try:
+                    self.logger.info(f"调用Storage API: spaceId={space_id}, fileId={file_id}, unionId={union_id}")
+                    
+                    # 创建运行时选项
+                    runtime_options = util_models.RuntimeOptions()
+                    
+                    # 调用API获取下载信息 - 严格按照官方代码
+                    response = client.get_file_download_info_with_options(
+                        space_id, 
+                        file_id, 
+                        get_file_download_info_request, 
+                        get_file_download_info_headers, 
+                        runtime_options
+                    )
+                    
+                    # 处理响应 - 根据官方文档，响应包含下载信息
+                    if response and hasattr(response, 'body') and response.body:
+                        download_info = response.body
+                        self.logger.info(f"Storage API响应: {download_info}")
+                        
+                        # 检查各种可能的下载URL字段
+                        download_url = None
+                        url_fields = ['download_url', 'url', 'downloadUrl', 'downloadUrl', 'file_url']
+                        
+                        for field in url_fields:
+                            if hasattr(download_info, field):
+                                download_url = getattr(download_info, field)
+                                self.logger.info(f"从字段 {field} 获取到下载URL: {download_url}")
+                                break
+                        
+                        if download_url:
+                            self.logger.info(f"Storage API获取到文件下载URL: {download_url}")
+                            return download_url
+                        else:
+                            self.logger.warning("Storage API响应中没有找到下载URL字段")
+                            self.logger.debug(f"响应内容: {download_info}")
+                            return ""
+                    else:
+                        self.logger.warning("Storage API响应为空")
+                        return ""
+                        
+                except Exception as api_err:
+                    # 记录完整的错误信息
+                    self.logger.error("=== Storage API调用失败详细信息 ===")
+                    
+                    if hasattr(api_err, 'code') and hasattr(api_err, 'message'):
+                        self.logger.error(f"错误代码: {api_err.code}")
+                        self.logger.error(f"错误消息: {api_err.message}")
+                        
+                        # 尝试获取更多错误详情
+                        if hasattr(api_err, 'data'):
+                            self.logger.error(f"错误数据: {api_err.data}")
+                        
+                        if hasattr(api_err, 'description'):
+                            self.logger.error(f"错误描述: {api_err.description}")
+                        
+                        if hasattr(api_err, 'access_denied_detail'):
+                            self.logger.error(f"权限拒绝详情: {api_err.access_denied_detail}")
+                        
+                        # 检查是否是权限问题
+                        if api_err.code == "Forbidden.AccessDenied.AccessTokenPermissionDenied":
+                            self.logger.error("=== 权限申请指导 ===")
+                            self.logger.error("您的钉钉应用缺少调用Storage API的权限")
+                            self.logger.error("请按以下步骤申请权限：")
+                            self.logger.error("1. 登录钉钉开放平台: https://open.dingtalk.com/")
+                            self.logger.error("2. 进入您的应用管理页面")
+                            self.logger.error("3. 在'权限管理'中添加以下权限：")
+                            self.logger.error("   - Contact.Org.Read (通讯录权限)")
+                            self.logger.error("   - Storage.Read (存储权限)")
+                            self.logger.error("4. 提交权限申请并等待审核通过")
+                            self.logger.error("5. 审核通过后重新部署应用")
+                            self.logger.error("=== 权限申请指导结束 ===")
+                        elif "403" in str(api_err.code) or "Forbidden" in str(api_err.code):
+                            self.logger.error("权限不足，请检查钉钉应用权限配置")
+                    else:
+                        self.logger.error(f"Storage API调用失败: {str(api_err)}")
+                    
+                    # 记录完整的异常信息
+                    self.logger.error(f"完整异常信息: {api_err}")
+                    self.logger.error("=== Storage API调用失败详细信息结束 ===")
+                    return ""
+                    
+            except Exception as err:
+                self.logger.error("=== 外层Storage API调用失败详细信息 ===")
+                if hasattr(err, 'code') and hasattr(err, 'message'):
+                    self.logger.error(f"错误代码: {err.code}")
+                    self.logger.error(f"错误消息: {err.message}")
+                    
+                    # 尝试获取更多错误详情
+                    if hasattr(err, 'data'):
+                        self.logger.error(f"错误数据: {err.data}")
+                    
+                    if hasattr(err, 'description'):
+                        self.logger.error(f"错误描述: {err.description}")
+                    
+                    if hasattr(err, 'access_denied_detail'):
+                        self.logger.error(f"权限拒绝详情: {err.access_denied_detail}")
+                else:
+                    self.logger.error(f"Storage API调用失败: {str(err)}")
+                
+                # 记录完整的异常信息
+                self.logger.error(f"完整异常信息: {err}")
+                self.logger.error("=== 外层Storage API调用失败详细信息结束 ===")
+                return ""
+                
         except Exception as e:
-            self.logger.error(f"获取文件下载地址失败: {str(e)}")
+            self.logger.error(f"获取文件下载URL失败: {str(e)}")
             return ""
     
     async def upload_file_to_dify(self, file_url: str, file_name: str, file_type: str) -> str:
@@ -690,92 +878,147 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
             # 下载文件
             import tempfile
             import requests
+            import shutil
             
             # 获取正确的文件扩展名
             file_extension = self._get_file_extension(file_name, file_type)
             self.logger.info(f"文件扩展名: {file_extension}")
             
+            # 服务器环境下的超时设置
+            timeout = int(os.environ.get('REQUESTS_TIMEOUT', '30'))
+            if is_server_environment():
+                timeout = max(timeout, 60)  # 服务器环境至少60秒超时
+            
+            # Docker环境检测
+            is_docker = os.path.exists('/.dockerenv') or os.environ.get('DOCKER_ENV', 'false').lower() == 'true'
+            if is_docker:
+                self.logger.info("检测到Docker环境，应用Docker优化配置")
+                timeout = max(timeout, 120)  # Docker环境120秒超时
+            
             # 创建临时文件，使用正确的扩展名
-            with tempfile.NamedTemporaryFile(delete=False, suffix=file_extension) as temp_file:
-                # 下载文件 - 如果是钉钉文件，需要添加访问令牌
-                headers = {}
-                if "api.dingtalk.com" in file_url:
-                    # 获取钉钉访问令牌
+            temp_file = None
+            temp_file_path = None
+            
+            # 下载文件 - 如果是钉钉文件，需要添加访问令牌
+            headers = {}
+            if "api.dingtalk.com" in file_url:
+                # 获取钉钉访问令牌
+                try:
+                    from dingtalk.auth import DingTalkAuth
+                    # 从环境变量获取钉钉配置
+                    client_id = os.environ.get("DINGTALK_CLIENT_ID")
+                    client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
+                    
+                    if client_id and client_secret:
+                        auth = DingTalkAuth(client_id, client_secret)
+                        access_token = auth.get_access_token()
+                        if access_token:
+                            headers['x-acs-dingtalk-access-token'] = access_token
+                            self.logger.info("使用钉钉访问令牌下载文件")
+                        else:
+                            self.logger.warning("无法获取钉钉访问令牌")
+                    else:
+                        self.logger.warning("钉钉配置不完整，跳过访问令牌")
+                except Exception as e:
+                    self.logger.warning(f"获取钉钉访问令牌失败: {str(e)}")
+            
+            # 如果是新的Storage API返回的URL，可能需要特殊处理
+            if "storage.dingtalk.com" in file_url or "download.dingtalk.com" in file_url:
+                self.logger.info("检测到Storage API下载URL，使用特殊处理")
+                # 对于Storage API的URL，可能需要添加额外的头部信息
+                if 'x-acs-dingtalk-access-token' not in headers:
                     try:
                         from dingtalk.auth import DingTalkAuth
-                        # 从环境变量获取钉钉配置
                         client_id = os.environ.get("DINGTALK_CLIENT_ID")
                         client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
-                        
                         if client_id and client_secret:
                             auth = DingTalkAuth(client_id, client_secret)
                             access_token = auth.get_access_token()
                             if access_token:
                                 headers['x-acs-dingtalk-access-token'] = access_token
-                                self.logger.info("使用钉钉访问令牌下载文件")
-                            else:
-                                self.logger.warning("无法获取钉钉访问令牌")
-                        else:
-                            self.logger.warning("钉钉配置不完整，跳过访问令牌")
+                                self.logger.info("为Storage API URL添加访问令牌")
                     except Exception as e:
-                        self.logger.warning(f"获取钉钉访问令牌失败: {str(e)}")
+                        self.logger.warning(f"为Storage API URL获取访问令牌失败: {str(e)}")
+            
+            # 按照钉钉API标准下载文件
+            download_success = False
+            response_content = None
+            
+            try:
+                self.logger.info(f"开始下载文件: {file_url}")
                 
-                # 尝试下载文件，如果失败则尝试其他方法
-                download_success = False
-                response_content = None
+                # 创建请求会话，设置连接参数
+                session = requests.Session()
+                session.verify = False  # 禁用SSL验证
                 
-                # 方法1：直接下载
-                try:
-                    self.logger.info(f"开始下载文件: {file_url}")
-                    response = requests.get(file_url, headers=headers, verify=False, timeout=30)
-                    if response.status_code == 200 and len(response.content) > 0:
-                        response_content = response.content
+                # 设置请求头
+                if headers:
+                    session.headers.update(headers)
+                
+                # 设置连接参数 - 参考Java代码的设置
+                session.headers.update({
+                    'User-Agent': 'DingTalk-Bot/1.0',
+                    'Accept': '*/*',
+                    'Connection': 'keep-alive'
+                })
+                
+                # 下载文件 - 使用GET方法（下载）但参考Java代码的连接设置
+                response = session.get(
+                    file_url, 
+                    timeout=timeout,
+                    stream=True  # 使用流式下载，参考Java的流式处理
+                )
+                
+                if response.status_code == 200:
+                    # 流式读取文件内容，参考Java的缓冲区处理
+                    response_content = b''
+                    chunk_size = 1024  # 参考Java的1024字节缓冲区
+                    
+                    for chunk in response.iter_content(chunk_size=chunk_size):
+                        if chunk:
+                            response_content += chunk
+                    
+                    if len(response_content) > 0:
                         download_success = True
-                        self.logger.info(f"文件下载成功: {file_name}, 大小: {len(response.content)}字节")
+                        self.logger.info(f"文件下载成功: {file_name}, 大小: {len(response_content)}字节")
                     else:
-                        self.logger.warning(f"文件下载失败，状态码: {response.status_code}, 内容长度: {len(response.content)}")
-                except Exception as e:
-                    self.logger.warning(f"文件下载失败: {str(e)}")
-                
-                # 如果下载失败，尝试其他方法
-                if not download_success:
-                    self.logger.warning("直接下载失败，尝试其他方法...")
+                        self.logger.warning("文件下载成功但内容为空")
+                else:
+                    self.logger.warning(f"文件下载失败，状态码: {response.status_code}, 响应: {response.text}")
                     
-                    # 尝试不同的API路径
-                    alternative_urls = [
-                        # 方法1：使用fileId
-                        file_url.replace("downloadCode=", "fileId=") if "downloadCode=" in file_url else None,
-                        # 方法2：使用不同的API路径
-                        file_url.replace("/robot/media/download", "/robot/file/download") if "/robot/media/download" in file_url else None,
-                        # 方法3：使用不同的参数格式
-                        file_url.replace("downloadCode=", "code=") if "downloadCode=" in file_url else None,
-                    ]
-                    
-                    for alt_url in alternative_urls:
-                        if alt_url and alt_url != file_url:
-                            try:
-                                self.logger.info(f"尝试备用下载URL: {alt_url}")
-                                response = requests.get(alt_url, headers=headers, verify=False, timeout=30)
-                                if response.status_code == 200 and len(response.content) > 0:
-                                    response_content = response.content
-                                    download_success = True
-                                    self.logger.info(f"备用下载成功: {file_name}, 大小: {len(response.content)}字节")
-                                    break
-                                else:
-                                    self.logger.warning(f"备用下载失败，状态码: {response.status_code}")
-                            except Exception as e:
-                                self.logger.warning(f"备用下载失败: {str(e)}")
-                                continue
+            except requests.exceptions.Timeout:
+                self.logger.error("文件下载超时")
+            except requests.exceptions.ConnectionError:
+                self.logger.error("文件下载连接错误")
+            except Exception as e:
+                self.logger.warning(f"文件下载失败: {str(e)}")
+            
+            if not download_success:
+                self.logger.error("Storage API文件下载失败")
+                return None
+            
+            # 创建临时文件并写入内容
+            try:
+                # Docker环境下的临时文件路径优化
+                if is_docker:
+                    temp_dir = '/tmp'
+                    if not os.path.exists(temp_dir):
+                        os.makedirs(temp_dir, exist_ok=True)
+                    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=file_extension, dir=temp_dir)
+                else:
+                    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=file_extension)
                 
-                if not response_content:
-                    self.logger.error("所有下载方法都失败了")
-                    return None
-                
-                # 写入临时文件
-                temp_file.write(response_content)
                 temp_file_path = temp_file.name
+                temp_file.write(response_content)
+                temp_file.close()
+                temp_file = None  # 避免重复关闭
                 
                 self.logger.info(f"文件下载成功: {file_name}, 大小: {len(response_content)}字节, 临时文件: {temp_file_path}")
+            except Exception as e:
+                self.logger.error(f"创建临时文件失败: {str(e)}")
+                if temp_file:
+                    temp_file.close()
+                return None
             
             # 检查临时文件是否存在
             if not os.path.exists(temp_file_path):
@@ -791,27 +1034,45 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
             
             self.logger.info(f"临时文件大小: {file_size}字节")
             
-            # 上传到Dify
+            # 上传到Dify - 参考Java代码的流式上传方式
             upload_url = f"{dify_api_base}/files/upload"
             headers = {
                 'Authorization': f'Bearer {dify_api_key}',
+                'Content-Type': 'multipart/form-data',
+                'User-Agent': 'DingTalk-Bot/1.0'
             }
             
             try:
+                # 创建上传会话，参考Java的连接设置
+                session = requests.Session()
+                session.verify = False  # 禁用SSL验证
+                session.headers.update(headers)
+                
+                # 流式上传文件，参考Java的流式处理
                 with open(temp_file_path, 'rb') as f:
                     files = {'file': (file_name, f, file_type)}
                     self.logger.info(f"开始上传文件到Dify: {upload_url}")
-                    response = requests.post(upload_url, headers=headers, files=files, verify=False, timeout=60)
-                    response.raise_for_status()
                     
-                    result = response.json()
-                    file_id = result.get('id')
+                    # 设置上传超时，参考Java的10秒超时
+                    upload_timeout = 60
+                    response = session.post(
+                        upload_url, 
+                        files=files, 
+                        timeout=upload_timeout
+                    )
                     
-                    if file_id:
-                        self.logger.info(f"文件上传成功，ID: {file_id}")
-                        return file_id
+                    if response.status_code == 200:
+                        result = response.json()
+                        file_id = result.get('id')
+                        
+                        if file_id:
+                            self.logger.info(f"文件上传成功，ID: {file_id}")
+                            return file_id
+                        else:
+                            self.logger.error(f"文件上传失败，响应: {result}")
+                            return None
                     else:
-                        self.logger.error(f"文件上传失败，响应: {result}")
+                        self.logger.error(f"文件上传失败，状态码: {response.status_code}, 响应: {response.text}")
                         return None
                         
             finally:
@@ -861,6 +1122,196 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
         except Exception as e:
             self.logger.error(f"获取文件扩展名失败: {str(e)}")
             return '.bin'
+    
+    async def upload_file_to_dingtalk(self, file_path: str, file_name: str, union_id: str = None) -> str:
+        """使用Storage 2.0 API上传文件到钉钉
+        
+        完整流程：
+        1. 获取上传信息 (GetFileUploadInfo)
+        2. 上传文件内容 (PUT请求)
+        3. 提交文件 (CommitFile)
+        """
+        try:
+            # 获取钉钉配置
+            client_id = os.environ.get("DINGTALK_CLIENT_ID")
+            client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
+            
+            if not client_id or not client_secret:
+                self.logger.error("钉钉配置不完整")
+                return None
+            
+            # 获取访问令牌
+            from dingtalk.auth import DingTalkAuth
+            auth = DingTalkAuth(client_id, client_secret)
+            access_token = auth.get_access_token()
+            
+            if not access_token:
+                self.logger.error("无法获取钉钉访问令牌")
+                return None
+            
+            # 尝试导入钉钉Storage 2.0 SDK
+            try:
+                from alibabacloud_dingtalk.storage_2_0.client import Client as dingtalkstorage_2_0Client
+                from alibabacloud_dingtalk.storage_2_0 import models as dingtalkstorage__2__0_models
+                from alibabacloud_tea_openapi import models as open_api_models
+                from alibabacloud_tea_util import models as util_models
+                from alibabacloud_tea_util.client import Client as UtilClient
+                
+                self.logger.info("钉钉Storage 2.0 SDK导入成功")
+            except ImportError as e:
+                self.logger.error(f"钉钉Storage 2.0 SDK导入失败: {str(e)}")
+                return None
+            
+            # 获取文件大小
+            file_size = os.path.getsize(file_path)
+            
+            # 创建Storage 2.0客户端
+            config = open_api_models.Config()
+            config.protocol = 'https'
+            config.region_id = 'central'
+            client = dingtalkstorage_2_0Client(config)
+            
+            # 设置请求头
+            get_file_upload_info_headers = dingtalkstorage__2__0_models.GetFileUploadInfoHeaders()
+            get_file_upload_info_headers.x_acs_dingtalk_access_token = access_token
+            
+            # 设置预检查参数
+            option_pre_check_param = dingtalkstorage__2__0_models.GetFileUploadInfoRequestOptionPreCheckParam(
+                size=file_size,
+                name=file_name
+            )
+            
+            # 设置请求选项
+            option = dingtalkstorage__2__0_models.GetFileUploadInfoRequestOption(
+                storage_driver='DINGTALK',
+                pre_check_param=option_pre_check_param,
+                prefer_region='ZHANGJIAKOU',
+                prefer_intranet=True
+            )
+            
+            # 设置请求参数
+            get_file_upload_info_request = dingtalkstorage__2__0_models.GetFileUploadInfoRequest(
+                union_id=union_id or 'default',
+                protocol='HEADER_SIGNATURE',
+                option=option
+            )
+            
+            # 调用API获取上传信息
+            try:
+                response = client.get_file_upload_info_with_options(
+                    'uuid',  # 这里需要根据实际情况提供space_id
+                    get_file_upload_info_request, 
+                    get_file_upload_info_headers, 
+                    util_models.RuntimeOptions()
+                )
+                
+                if response and hasattr(response, 'body') and response.body:
+                    upload_info = response.body
+                    
+                    # 获取上传URL和headers
+                    resource_url = upload_info.get('resource_url')
+                    headers = upload_info.get('headers', {})
+                    
+                    if resource_url and headers:
+                        self.logger.info(f"获取到上传信息: URL={resource_url}")
+                        
+                        # 使用PUT方法上传文件
+                        import requests
+                        
+                        # 创建上传会话
+                        session = requests.Session()
+                        session.verify = False
+                        session.headers.update(headers)
+                        
+                        # 设置连接参数
+                        session.headers.update({
+                            'User-Agent': 'DingTalk-Bot/1.0',
+                            'Accept': '*/*',
+                            'Connection': 'keep-alive'
+                        })
+                        
+                        # 流式上传文件
+                        with open(file_path, 'rb') as f:
+                            self.logger.info(f"开始上传文件: {file_name}")
+                            response = session.put(
+                                resource_url,
+                                data=f,
+                                timeout=60
+                            )
+                        
+                        if response.status_code == 200:
+                            self.logger.info(f"文件内容上传成功: {file_name}")
+                            
+                            # 第三步：提交文件 - 根据您提供的代码
+                            try:
+                                # 设置提交文件请求头
+                                commit_file_headers = dingtalkstorage__2__0_models.CommitFileHeaders()
+                                commit_file_headers.x_acs_dingtalk_access_token = access_token
+                                
+                                # 设置应用属性
+                                option_app_properties_0 = dingtalkstorage__2__0_models.CommitFileRequestOptionAppProperties(
+                                    name='source',
+                                    value='dingtalk_bot',
+                                    visibility='PRIVATE'
+                                )
+                                
+                                # 设置提交选项
+                                option = dingtalkstorage__2__0_models.CommitFileRequestOption(
+                                    size=file_size,
+                                    conflict_strategy='AUTO_RENAME',
+                                    app_properties=[option_app_properties_0],
+                                    convert_to_online_doc=False
+                                )
+                                
+                                # 创建提交请求
+                                commit_file_request = dingtalkstorage__2__0_models.CommitFileRequest(
+                                    union_id=union_id or 'default',
+                                    upload_key=upload_info.get('upload_key', ''),
+                                    name=file_name,
+                                    option=option
+                                )
+                                
+                                # 提交文件
+                                commit_response = client.commit_file_with_options(
+                                    'uuid',  # 这里需要根据实际情况提供space_id
+                                    commit_file_request, 
+                                    commit_file_headers, 
+                                    util_models.RuntimeOptions()
+                                )
+                                
+                                if commit_response and hasattr(commit_response, 'body') and commit_response.body:
+                                    self.logger.info(f"文件提交成功: {file_name}")
+                                    return "success"
+                                else:
+                                    self.logger.error("文件提交失败")
+                                    return None
+                                    
+                            except Exception as commit_err:
+                                if hasattr(commit_err, 'code') and hasattr(commit_err, 'message'):
+                                    self.logger.error(f"文件提交失败: code={commit_err.code}, message={commit_err.message}")
+                                else:
+                                    self.logger.error(f"文件提交失败: {str(commit_err)}")
+                                return None
+                        else:
+                            self.logger.error(f"文件上传失败，状态码: {response.status_code}")
+                            return None
+                    else:
+                        self.logger.error("上传信息不完整")
+                        return None
+                else:
+                    self.logger.error("获取上传信息失败")
+                    return None
+                    
+            except Exception as api_err:
+                if hasattr(api_err, 'code') and hasattr(api_err, 'message'):
+                    self.logger.error(f"Storage 2.0 API调用失败: code={api_err.code}, message={api_err.message}")
+                else:
+                    self.logger.error(f"Storage 2.0 API调用失败: {str(api_err)}")
+                return None
+                
+        except Exception as e:
+            self.logger.error(f"上传文件到钉钉失败: {str(e)}")
+            return None
     
     def reply_image(self, image_url: str, incoming_message: ChatbotMessage):
         """回复图片消息"""

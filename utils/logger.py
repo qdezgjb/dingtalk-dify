@@ -202,14 +202,30 @@ def setup_logger(
     
     return logger
 
+# 从环境变量读取日志级别
+import os
+env_log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+if env_log_level == "DEBUG":
+    default_level = logging.DEBUG
+elif env_log_level == "INFO":
+    default_level = logging.INFO
+elif env_log_level == "WARNING":
+    default_level = logging.WARNING
+elif env_log_level == "ERROR":
+    default_level = logging.ERROR
+elif env_log_level == "CRITICAL":
+    default_level = logging.CRITICAL
+else:
+    default_level = logging.INFO
+
 # 创建应用日志记录器
-app_logger = setup_logger("dingtalk_dify_adapter")
+app_logger = setup_logger("dingtalk_dify_adapter", level=default_level)
 
 # 创建钉钉API日志记录器
-dingtalk_logger = setup_logger("dingtalk_api", level=logging.INFO)
+dingtalk_logger = setup_logger("dingtalk_api", level=default_level)
 
 # 创建Dify API日志记录器
-dify_logger = setup_logger("dify_api", level=logging.INFO)
+dify_logger = setup_logger("dify_api", level=default_level)
 
 def log_request(logger: logging.Logger, method: str, url: str, 
                 headers: Optional[Dict[str, Any]] = None, 

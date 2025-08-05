@@ -226,14 +226,23 @@ DIFY_APP_TYPE=workflow
 1. **CardBotHandler**: 多类型消息处理器，继承自官方 `ChatbotHandler`
 2. **DifyClient**: Dify API客户端，处理与Dify的通信
 3. **AICardReplier**: 官方AI卡片回复器，用于创建和更新AI卡片
+4. **Storage API**: 钉钉Storage 1.0/2.0 API，处理文件下载和上传
 
 ### 消息处理流程
 
 1. **接收消息** - 根据消息类型分发处理
 2. **内容提取** - 提取文本、图片、语音、文件信息
-3. **发送给Dify** - 将消息内容发送给Dify API
-4. **接收响应** - 处理Dify的回复内容
-5. **发送回复** - 根据内容类型选择合适的回复方式
+3. **文件处理** - 使用Storage API下载文件并上传到Dify
+4. **发送给Dify** - 将消息内容发送给Dify API
+5. **接收响应** - 处理Dify的回复内容
+6. **发送回复** - 根据内容类型选择合适的回复方式
+
+### 文件处理功能
+
+- **文件下载**: 使用Storage 1.0 API从钉钉下载文件
+- **文件上传**: 使用Storage 2.0 API上传文件到钉钉（新增功能）
+- **流式处理**: 支持大文件的流式下载和上传
+- **错误处理**: 完善的错误处理和重试机制
 
 ## 安装和配置
 
@@ -277,17 +286,61 @@ STREAM_MODE=ai_card
 ### 4. 申请权限
 
 确保钉钉应用已申请以下权限：
+
+#### 基础权限
 - `Card.Streaming.Write`: AI卡片流式更新权限
 - `Robot.Message.Send`: 机器人消息发送权限
 - `Robot.Message.Receive`: 机器人消息接收权限
 
+#### 文件处理权限（必需）
+- `Contact.Org.Read`: 通讯录权限（Storage API必需）
+- `Storage.Read`: 存储权限（文件下载必需）
+- `Storage.Write`: 存储权限（文件上传必需，新增功能）
+
+**重要**：如果遇到 `Forbidden.AccessDenied.AccessTokenPermissionDenied` 错误，请参考 [权限申请指导](PERMISSION_GUIDE.md) 进行权限申请。
+
 ## 使用方法
 
-### 运行程序
+### 本地开发环境
 
 ```bash
 python app.py
 ```
+
+### 服务器部署
+
+#### 方法一：使用服务器启动脚本（推荐）
+
+```bash
+python start_server.py
+```
+
+服务器启动脚本会自动：
+- 检测服务器环境
+- 检查并安装依赖
+- 设置优化的服务器配置
+- 启动应用程序
+
+#### 方法二：手动设置环境变量
+
+```bash
+# 设置服务器环境变量
+export SERVER_ENV=true
+export LOG_LEVEL=INFO
+export REQUESTS_TIMEOUT=60
+export MAX_FILE_SIZE=100MB
+
+# 启动应用程序
+python app.py
+```
+
+#### 服务器环境优化
+
+服务器环境下会自动应用以下优化：
+- 更长的网络超时时间（60秒）
+- 更大的文件上传限制（100MB）
+- 详细的日志记录
+- 增强的错误处理
 
 ### 命令行参数
 
@@ -349,8 +402,9 @@ dingtalk/
 
 ### 📁 文件消息处理
 - **接收**: 用户发送文件
-- **处理**: 提取文件信息，发送给Dify
+- **处理**: 使用钉钉Storage API获取文件下载信息，提取文件内容发送给Dify
 - **回复**: 文本回复文件处理结果
+- **支持**: 基于官方Storage API，支持更稳定的文件下载
 
 ## 关键改进
 
@@ -437,9 +491,28 @@ LOG_LEVEL=DEBUG
 
 ## 版本历史
 
+- **v2.2**: 升级文件下载功能，使用钉钉Storage API，提高文件处理稳定性
 - **v2.1**: 增加多类型消息支持（图片、语音、文件、链接、OA）
 - **v2.0**: 基于官方代码重构，使用 `AICardReplier`
 - **v1.0**: 初始版本，自定义AI卡片实现
+
+## 新功能说明
+
+### 文件下载升级 (v2.2)
+
+- **官方Storage API**: 使用钉钉官方Storage API获取文件下载信息
+- **稳定的下载**: 基于官方SDK，支持多种文件类型
+- **详细日志**: 提供完整的下载过程日志和错误信息
+
+### 新增依赖
+
+项目新增了以下依赖包：
+- `alibabacloud-tea-openapi`: 阿里云OpenAPI SDK
+- `alibabacloud-tea-util`: 阿里云工具包
+
+**钉钉Storage SDK**: 已包含在requirements.txt中
+- 安装命令: `pip install alibabacloud-dingtalk alibabacloud-tea-openapi alibabacloud-tea-util`
+- 或者直接运行: `pip install -r requirements.txt`
 
 ## 许可证
 

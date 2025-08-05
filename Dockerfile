@@ -34,6 +34,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir pyOpenSSL ndg-httpsclient pyasn1 requests[security]
 
+# 拷贝taobao SDK核心模块到容器中
+COPY ../../taobao-sdk-PYTHON-auto_1479188381469-20250717/dingtalk /app/dingtalk_sdk
+COPY ../../taobao-sdk-PYTHON-auto_1479188381469-20250717/top /app/top
+
+# 设置Python路径
+ENV PYTHONPATH=/app:/app/dingtalk_sdk:/app/top
+
 # 拷贝应用代码
 COPY . .
 

@@ -4,6 +4,11 @@ dingtalk-stream>=0.24.2
 python-dotenv==0.19.0
 sseclient-py==1.7.2
 
+# 钉钉Storage SDK (支持1.0和2.0版本)
+alibabacloud-dingtalk>=2.2.27
+alibabacloud-tea-openapi>=0.4.0
+alibabacloud-tea-util>=0.3.13
+
 # 日志和工具类
 pytz>=2022.1
 colorama>=0.4.4  # 用于Windows终端颜色支持

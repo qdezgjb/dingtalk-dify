@@ -8,7 +8,8 @@ services:
     container_name: dingtalk-dify-adapter-stream
     restart: always
     volumes:
-      - ./config.json:/app/config.json
       - ./logs:/app/logs
+    env_file:
+      - .env
     environment:
       - TZ=Asia/Shanghai 
