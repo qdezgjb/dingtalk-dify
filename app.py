@@ -773,17 +773,39 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
                         
                         # 检查各种可能的下载URL字段
                         download_url = None
-                        url_fields = ['download_url', 'url', 'downloadUrl', 'downloadUrl', 'file_url']
                         
-                        for field in url_fields:
-                            if hasattr(download_info, field):
-                                download_url = getattr(download_info, field)
-                                self.logger.info(f"从字段 {field} 获取到下载URL: {download_url}")
-                                break
+                        # 1. 检查是否有headerSignatureInfo格式的响应
+                        if hasattr(download_info, 'headerSignatureInfo'):
+                            header_info = download_info.headerSignatureInfo
+                            if hasattr(header_info, 'resourceUrls') and header_info.resourceUrls:
+                                # 取第一个resourceUrl作为下载URL
+                                download_url = header_info.resourceUrls[0]
+                                self.logger.info(f"从headerSignatureInfo.resourceUrls获取到下载URL: {download_url}")
+                            elif hasattr(header_info, 'internalResourceUrls') and header_info.internalResourceUrls:
+                                # 如果没有resourceUrls，尝试internalResourceUrls
+                                download_url = header_info.internalResourceUrls[0]
+                                self.logger.info(f"从headerSignatureInfo.internalResourceUrls获取到下载URL: {download_url}")
+                        
+                        # 2. 检查传统的下载URL字段
+                        if not download_url:
+                            url_fields = ['download_url', 'url', 'downloadUrl', 'file_url']
+                            for field in url_fields:
+                                if hasattr(download_info, field):
+                                    download_url = getattr(download_info, field)
+                                    self.logger.info(f"从字段 {field} 获取到下载URL: {download_url}")
+                                    break
                         
                         if download_url:
                             self.logger.info(f"Storage API获取到文件下载URL: {download_url}")
-                            return download_url
+                            
+                            # 检查是否是HEADER_SIGNATURE协议
+                            if hasattr(download_info, 'protocol') and download_info.protocol == 'HEADER_SIGNATURE':
+                                self.logger.info("检测到HEADER_SIGNATURE协议，需要特殊处理")
+                                # 对于HEADER_SIGNATURE协议，我们需要使用特殊的下载方式
+                                # 这里我们直接返回URL，让后续的下载函数处理
+                                return download_url
+                            else:
+                                return download_url
                         else:
                             self.logger.warning("Storage API响应中没有找到下载URL字段")
                             self.logger.debug(f"响应内容: {download_info}")
@@ -923,7 +945,7 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
                     self.logger.warning(f"获取钉钉访问令牌失败: {str(e)}")
             
             # 如果是新的Storage API返回的URL，可能需要特殊处理
-            if "storage.dingtalk.com" in file_url or "download.dingtalk.com" in file_url:
+            if "storage.dingtalk.com" in file_url or "download.dingtalk.com" in file_url or "zjk-dualstack.trans.dingtalk.com" in file_url:
                 self.logger.info("检测到Storage API下载URL，使用特殊处理")
                 # 对于Storage API的URL，可能需要添加额外的头部信息
                 if 'x-acs-dingtalk-access-token' not in headers:
