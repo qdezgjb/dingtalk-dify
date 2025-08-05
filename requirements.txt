@@ -9,6 +9,10 @@ alibabacloud-dingtalk>=2.2.27
 alibabacloud-tea-openapi>=0.4.0
 alibabacloud-tea-util>=0.3.13
 
+# 钉钉官方SDK (用于获取unionId)
+# 根据钉钉官方文档：https://open.dingtalk.com/document/resourcedownload/download-server-sdk
+alibabacloud-dingtalk>=2.2.27
+
 # 日志和工具类
 pytz>=2022.1
 colorama>=0.4.4  # 用于Windows终端颜色支持

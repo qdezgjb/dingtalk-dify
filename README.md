@@ -252,6 +252,8 @@ DIFY_APP_TYPE=workflow
 pip install -r requirements.txt
 ```
 
+**注意**：项目使用钉钉官方SDK `alibabacloud-dingtalk`，无需手动下载taobao SDK文件。所有依赖都会通过pip自动安装。
+
 ### 2. 配置环境变量
 
 复制 `env.example` 到 `.env` 并填写配置：

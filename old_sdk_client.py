@@ -11,45 +11,23 @@ import sys
 import requests
 from typing import Optional
 
-# 添加taobao SDK路径 - 按照官方文档方式
-taobao_sdk_paths = [
-    '/app/dingtalk_sdk',  # Docker容器中的SDK路径
-    '/app/top',  # Docker容器中的top模块路径
-    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-                 'taobao-sdk-PYTHON-auto_1479188381469-20250717', 'dingtalk'),
-    os.path.join(os.path.dirname(os.path.dirname(__file__)), 
-                 'taobao-sdk-PYTHON-auto_1479188381469-20250717', 'dingtalk'),
-    os.path.join(os.getcwd(), 'dingtalk_sdk'),  # 当前工作目录下的SDK
-]
+# 使用pip安装的alibabacloud-dingtalk SDK
+# 根据钉钉官方文档：https://open.dingtalk.com/document/resourcedownload/download-server-sdk
+# 不需要手动添加路径，直接导入即可
 
-# 尝试添加SDK路径
+# 尝试导入SDK
 OLD_SDK_AVAILABLE = False
-sdk_found = False
-
-# 添加所有存在的SDK路径
-for sdk_path in taobao_sdk_paths:
-    if os.path.exists(sdk_path):
-        sys.path.insert(0, sdk_path)
-        print(f"找到taobao SDK路径: {sdk_path}")
-        sdk_found = True
-
-if not sdk_found:
-    print("未找到taobao SDK，尝试的路径:")
-    for path in taobao_sdk_paths:
-        print(f"  - {path}")
-    print(f"当前工作目录: {os.getcwd()}")
-    print(f"当前Python路径: {sys.path}")
-
 try:
-    import dingtalk.api
-    from dingtalk.api.rest.OapiUserGetRequest import OapiUserGetRequest
-    from dingtalk.api.rest.OapiGettokenRequest import OapiGettokenRequest
+    # 使用新版的alibabacloud-dingtalk SDK
+    from alibabacloud_dingtalk.contact_1_0.client import Client as ContactClient
+    from alibabacloud_dingtalk.contact_1_0.models import GetUserRequest
+    from alibabacloud_tea_openapi.models import Config
+    from alibabacloud_tea_util.models import RuntimeOptions
     OLD_SDK_AVAILABLE = True
-    print("旧版SDK导入成功")
+    print("新版alibabacloud-dingtalk SDK导入成功")
 except ImportError as e:
+    print(f"新版SDK导入失败: {e}")
     OLD_SDK_AVAILABLE = False
-    print(f"旧版SDK导入失败: {e}")
-    print(f"当前Python路径: {sys.path}")
 
 class OldSDKClient:
     def __init__(self, app_key: str, app_secret: str):
@@ -60,19 +38,22 @@ class OldSDKClient:
     def get_access_token(self) -> Optional[str]:
         """获取访问令牌"""
         try:
-            # 使用旧版SDK获取访问令牌
-            request = OapiGettokenRequest("https://oapi.dingtalk.com/gettoken")
-            request.appkey = self.app_key
-            request.appsecret = self.app_secret
+            # 使用钉钉API获取访问令牌
+            url = "https://oapi.dingtalk.com/gettoken"
+            params = {
+                "appkey": self.app_key,
+                "appsecret": self.app_secret
+            }
             
-            response = request.getResponse()
-            print(f"获取访问令牌响应: {response}")
+            response = requests.get(url, params=params, timeout=10)
+            result = response.json()
+            print(f"获取访问令牌响应: {result}")
             
-            if response and 'access_token' in response:
-                self.access_token = response['access_token']
+            if result.get("errcode") == 0 and 'access_token' in result:
+                self.access_token = result['access_token']
                 return self.access_token
             else:
-                print(f"获取访问令牌失败: {response}")
+                print(f"获取访问令牌失败: {result}")
                 return None
         except Exception as e:
             print(f"获取访问令牌异常: {e}")
@@ -88,16 +69,23 @@ class OldSDKClient:
                 if not self.access_token:
                     return None
             
-            # 使用旧版SDK获取用户信息
-            request = OapiUserGetRequest()
+            # 使用新版alibabacloud-dingtalk SDK获取用户信息
+            config = Config()
+            config.protocol = "https"
+            config.region_id = "central"
+            
+            client = ContactClient(config)
+            request = GetUserRequest()
             request.userid = user_id
             
+            runtime = RuntimeOptions()
+            
             # 设置访问令牌
-            response = request.getResponse(self.access_token)
+            response = client.get_user_with_options(request, runtime)
             print(f"获取用户信息响应: {response}")
             
-            if response and 'unionid' in response:
-                return response['unionid']
+            if response and hasattr(response.body, 'unionid'):
+                return response.body.unionid
             else:
                 print(f"获取用户unionId失败: {response}")
                 return None
