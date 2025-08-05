@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  dingtalk-dify-adapter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dingtalk-dify-adapter-stream
+    restart: always
+    volumes:
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Shanghai 

@@ -1,0 +1,47 @@
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:95] - 成功加载配置文件: config.json
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:612] - ======================================
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:613] -     钉钉-Dify 消息适配器 (Stream版)    
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:614] - ======================================
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:615] - 配置文件: config.json
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:616] - Dify API: http://1.92.133.173/v1
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:617] - Dify 应用类型: chat
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:631] - 流式输出模式: ai_card
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:601] - 测试Dify API连接: http://1.92.133.173/v1
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:604] - Dify API连接测试结果: 状态码=200
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:650] - 成功创建钉钉Stream客户端
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:669] - 使用AI卡片流式输出模式
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:686] - 成功注册AI卡片流式处理器，模板ID: 9dfa95b6-7c55-4a11-8666-b7cc5577f5a8.schema
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:694] - 启动Stream客户端...
+2025-08-02 15:22:59 [DEBUG   ] dingtalk_dify_adapter: 这是一条调试信息
+2025-08-02 15:22:59 [INFO    ] dingtalk_dify_adapter: 这是一条普通信息
+2025-08-02 15:22:59 [WARNING ] dingtalk_dify_adapter: 这是一条警告信息，包含源代码位置 [test_logger:16]
+2025-08-02 15:22:59 [ERROR   ] dingtalk_dify_adapter: 这是一条错误信息，带有源代码位置 [test_logger:17]
+2025-08-02 15:22:59 [ERROR   ] dingtalk_dify_adapter: 这是一条带有异常堆栈的错误信息
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero [test_logger:22]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
+2025-08-02 15:22:59 [CRITICAL] dingtalk_dify_adapter: 这是一条严重错误信息，带有高亮背景 [test_logger:24]
+2025-08-02 15:24:02 [DEBUG   ] dingtalk_dify_adapter: 这是一条调试信息
+2025-08-02 15:24:02 [INFO    ] dingtalk_dify_adapter: 这是一条普通信息
+2025-08-02 15:24:02 [WARNING ] dingtalk_dify_adapter: 这是一条警告信息，包含源代码位置 [test_logger:16]
+2025-08-02 15:24:02 [ERROR   ] dingtalk_dify_adapter: 这是一条错误信息，带有源代码位置 [test_logger:17]
+2025-08-02 15:24:02 [ERROR   ] dingtalk_dify_adapter: 这是一条带有异常堆栈的错误信息
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero [test_logger:22]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
+2025-08-02 15:24:02 [CRITICAL] dingtalk_dify_adapter: 这是一条严重错误信息，带有高亮背景 [test_logger:24]
+2025-08-02 15:31:46 [INFO    ] dingtalk_dify_adapter: 成功加载配置文件: config.json

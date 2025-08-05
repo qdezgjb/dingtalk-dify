@@ -1,0 +1,106 @@
+2025-08-02 12:33:02,737 - dingtalk_dify_adapter - INFO - ³É¹¦¼ÓÔØÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:33:02,738 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:33:02,738 - dingtalk_dify_adapter - INFO -     ¶¤¶¤-Dify ÏûÏ¢ÊÊÅäÆ÷ (Stream°æ)    
+2025-08-02 12:33:02,738 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:33:02,738 - dingtalk_dify_adapter - INFO - ÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:33:02,739 - dingtalk_dify_adapter - INFO - Dify API: http://1.92.133.173/v1
+2025-08-02 12:33:02,739 - dingtalk_dify_adapter - INFO - Dify Ó¦ÓÃÀàĞÍ: chat
+2025-08-02 12:33:02,739 - dingtalk_dify_adapter - INFO - Á÷Ê½Êä³öÄ£Ê½: ai_card
+2025-08-02 12:33:02,739 - dingtalk_dify_adapter - INFO - ²âÊÔDify APIÁ¬½Ó: http://1.92.133.173/v1
+2025-08-02 12:33:02,796 - dingtalk_dify_adapter - INFO - Dify APIÁ¬½Ó²âÊÔ½á¹û: ×´Ì¬Âë=200
+2025-08-02 12:33:02,796 - dingtalk_dify_adapter - INFO - ³É¹¦´´½¨¶¤¶¤Stream¿Í»§¶Ë
+2025-08-02 12:33:02,796 - dingtalk_dify_adapter - INFO - Ê¹ÓÃAI¿¨Æ¬Á÷Ê½Êä³öÄ£Ê½
+2025-08-02 12:33:02,796 - dingtalk_dify_adapter - INFO - ³É¹¦×¢²áAI¿¨Æ¬Á÷Ê½´¦ÀíÆ÷£¬Ä£°åID: 9dfa95b6-7c55-4a11-8666-b7cc5577f5a8.schema
+2025-08-02 12:33:02,796 - dingtalk_dify_adapter - INFO - Æô¶¯Stream¿Í»§¶Ë...
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - ³É¹¦¼ÓÔØÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO -     ¶¤¶¤-Dify ÏûÏ¢ÊÊÅäÆ÷ (Stream°æ)    
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - ÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - Dify API: http://1.92.133.173/v1
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - Dify Ó¦ÓÃÀàĞÍ: chat
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - Á÷Ê½Êä³öÄ£Ê½: ai_card
+2025-08-02 12:34:03,276 - dingtalk_dify_adapter - INFO - ²âÊÔDify APIÁ¬½Ó: http://1.92.133.173/v1
+2025-08-02 12:34:03,365 - dingtalk_dify_adapter - INFO - Dify APIÁ¬½Ó²âÊÔ½á¹û: ×´Ì¬Âë=200
+2025-08-02 12:34:03,365 - dingtalk_dify_adapter - INFO - ³É¹¦´´½¨¶¤¶¤Stream¿Í»§¶Ë
+2025-08-02 12:34:03,365 - dingtalk_dify_adapter - INFO - Ê¹ÓÃAI¿¨Æ¬Á÷Ê½Êä³öÄ£Ê½
+2025-08-02 12:34:03,365 - dingtalk_dify_adapter - INFO - ³É¹¦×¢²áAI¿¨Æ¬Á÷Ê½´¦ÀíÆ÷£¬Ä£°åID: 9dfa95b6-7c55-4a11-8666-b7cc5577f5a8.schema
+2025-08-02 12:34:03,365 - dingtalk_dify_adapter - INFO - Æô¶¯Stream¿Í»§¶Ë...
+2025-08-02 12:34:03,365 - dingtalk_stream.client - INFO - open connection, url=https://api.dingtalk.com/v1.0/gateway/connections/open
+2025-08-02 12:34:03,469 - dingtalk_stream.client - INFO - endpoint is {'endpoint': 'wss://wss-open-connection.dingtalk.com:443/connect', 'ticket': 'eb186f7a-6f59-11f0-89fb-2eaa794b294e'}
+2025-08-02 12:34:16,553 - dingtalk_stream.client - INFO - open connection, url=https://api.dingtalk.com/v1.0/gateway/connections/open
+2025-08-02 12:34:16,627 - dingtalk_stream.client - INFO - endpoint is {'endpoint': 'wss://wss-open-connection.dingtalk.com:443/connect', 'ticket': 'f2f01541-6f59-11f0-80bd-52afbb2bd5e8'}
+2025-08-02 12:35:00,370 - dingtalk_dify_adapter - INFO - ÊÕµ½ÏûÏ¢: ÄãºÃ
+2025-08-02 12:35:00,371 - dingtalk_dify_adapter - ERROR - ´¦ÀíÏûÏ¢Ê±³ö´í: name 'DingTalkClient' is not defined
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\app.py", line 455, in process_with_ai_card
+    dingtalk_client = DingTalkClient(
+                      ^^^^^^^^^^^^^^
+NameError: name 'DingTalkClient' is not defined. Did you mean: 'DingTalkStreamClient'?
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:95] - æˆåŠŸåŠ è½½é…ç½®æ–‡ä»¶: config.json
+2025-08-02 12:39:52,820 - dingtalk_dify_adapter - INFO - ³É¹¦¼ÓÔØÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:612] - ======================================
+2025-08-02 12:39:52,821 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:613] -     é’‰é’‰-Dify æ¶ˆæ¯é€‚é…å™¨ (Streamç‰ˆ)    
+2025-08-02 12:39:52,821 - dingtalk_dify_adapter - INFO -     ¶¤¶¤-Dify ÏûÏ¢ÊÊÅäÆ÷ (Stream°æ)    
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:614] - ======================================
+2025-08-02 12:39:52,822 - dingtalk_dify_adapter - INFO - ======================================
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:615] - é…ç½®æ–‡ä»¶: config.json
+2025-08-02 12:39:52,822 - dingtalk_dify_adapter - INFO - ÅäÖÃÎÄ¼ş: config.json
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:616] - Dify API: http://1.92.133.173/v1
+2025-08-02 12:39:52,822 - dingtalk_dify_adapter - INFO - Dify API: http://1.92.133.173/v1
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:617] - Dify åº”ç”¨ç±»å‹: chat
+2025-08-02 12:39:52,822 - dingtalk_dify_adapter - INFO - Dify Ó¦ÓÃÀàĞÍ: chat
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:631] - æµå¼è¾“å‡ºæ¨¡å¼: ai_card
+2025-08-02 12:39:52,823 - dingtalk_dify_adapter - INFO - Á÷Ê½Êä³öÄ£Ê½: ai_card
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:601] - æµ‹è¯•Dify APIè¿æ¥: http://1.92.133.173/v1
+2025-08-02 12:39:52,823 - dingtalk_dify_adapter - INFO - ²âÊÔDify APIÁ¬½Ó: http://1.92.133.173/v1
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:604] - Dify APIè¿æ¥æµ‹è¯•ç»“æœ: çŠ¶æ€ç =200
+2025-08-02 12:39:52,873 - dingtalk_dify_adapter - INFO - Dify APIÁ¬½Ó²âÊÔ½á¹û: ×´Ì¬Âë=200
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:650] - æˆåŠŸåˆ›å»ºé’‰é’‰Streamå®¢æˆ·ç«¯
+2025-08-02 12:39:52,873 - dingtalk_dify_adapter - INFO - ³É¹¦´´½¨¶¤¶¤Stream¿Í»§¶Ë
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:669] - ä½¿ç”¨AIå¡ç‰‡æµå¼è¾“å‡ºæ¨¡å¼
+2025-08-02 12:39:52,874 - dingtalk_dify_adapter - INFO - Ê¹ÓÃAI¿¨Æ¬Á÷Ê½Êä³öÄ£Ê½
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:686] - æˆåŠŸæ³¨å†ŒAIå¡ç‰‡æµå¼å¤„ç†å™¨ï¼Œæ¨¡æ¿ID: 9dfa95b6-7c55-4a11-8666-b7cc5577f5a8.schema
+2025-08-02 12:39:52,874 - dingtalk_dify_adapter - INFO - ³É¹¦×¢²áAI¿¨Æ¬Á÷Ê½´¦ÀíÆ÷£¬Ä£°åID: 9dfa95b6-7c55-4a11-8666-b7cc5577f5a8.schema
+2025-08-02 12:39:52 - dingtalk_dify_adapter - INFO - [app:694] - å¯åŠ¨Streamå®¢æˆ·ç«¯...
+2025-08-02 12:39:52,874 - dingtalk_dify_adapter - INFO - Æô¶¯Stream¿Í»§¶Ë...
+2025-08-02 12:39:52,875 - dingtalk_stream.client - INFO - open connection, url=https://api.dingtalk.com/v1.0/gateway/connections/open
+2025-08-02 12:39:52,947 - dingtalk_stream.client - INFO - endpoint is {'endpoint': 'wss://wss-open-connection.dingtalk.com:443/connect', 'ticket': 'bb656cdb-6f5a-11f0-884b-5a20030ba585'}
+2025-08-02 12:40:06,011 - dingtalk_stream.client - INFO - open connection, url=https://api.dingtalk.com/v1.0/gateway/connections/open
+2025-08-02 12:40:06,088 - dingtalk_stream.client - INFO - endpoint is {'endpoint': 'wss://wss-open-connection.dingtalk.com:443/connect', 'ticket': 'c33ae446-6f5a-11f0-bee8-0eb3b764c0bb'}
+2025-08-02 15:22:59 [DEBUG   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡è°ƒè¯•ä¿¡æ¯
+2025-08-02 15:22:59 [INFO    ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡æ™®é€šä¿¡æ¯
+2025-08-02 15:22:59 [WARNING ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡è­¦å‘Šä¿¡æ¯ï¼ŒåŒ…å«æºä»£ç ä½ç½® [test_logger:16]
+2025-08-02 15:22:59 [ERROR   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡é”™è¯¯ä¿¡æ¯ï¼Œå¸¦æœ‰æºä»£ç ä½ç½® [test_logger:17]
+2025-08-02 15:22:59 [ERROR   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡å¸¦æœ‰å¼‚å¸¸å †æ ˆçš„é”™è¯¯ä¿¡æ¯
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero [test_logger:22]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
+2025-08-02 15:22:59 [CRITICAL] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡ä¸¥é‡é”™è¯¯ä¿¡æ¯ï¼Œå¸¦æœ‰é«˜äº®èƒŒæ™¯ [test_logger:24]
+2025-08-02 15:24:02 [DEBUG   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡è°ƒè¯•ä¿¡æ¯
+2025-08-02 15:24:02 [INFO    ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡æ™®é€šä¿¡æ¯
+2025-08-02 15:24:02 [WARNING ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡è­¦å‘Šä¿¡æ¯ï¼ŒåŒ…å«æºä»£ç ä½ç½® [test_logger:16]
+2025-08-02 15:24:02 [ERROR   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡é”™è¯¯ä¿¡æ¯ï¼Œå¸¦æœ‰æºä»£ç ä½ç½® [test_logger:17]
+2025-08-02 15:24:02 [ERROR   ] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡å¸¦æœ‰å¼‚å¸¸å †æ ˆçš„é”™è¯¯ä¿¡æ¯
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero [test_logger:22]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\dingtalk\test_logger.py", line 20, in test_log_levels
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
+2025-08-02 15:24:02 [CRITICAL] dingtalk_dify_adapter: è¿™æ˜¯ä¸€æ¡ä¸¥é‡é”™è¯¯ä¿¡æ¯ï¼Œå¸¦æœ‰é«˜äº®èƒŒæ™¯ [test_logger:24]
+2025-08-02 15:31:46 [INFO    ] dingtalk_dify_adapter: æˆåŠŸåŠ è½½é…ç½®æ–‡ä»¶: config.json
+2025-08-04 10:53:07 [INFO    ] dingtalk_dify_adapter: æˆåŠŸä»ç¯å¢ƒå˜é‡åŠ è½½é…ç½®
+2025-08-04 10:54:24 [INFO    ] dingtalk_dify_adapter: æˆåŠŸä»ç¯å¢ƒå˜é‡åŠ è½½é…ç½®

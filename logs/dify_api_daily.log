@@ -1,0 +1,4 @@
+2025-08-04 14:24:00 [INFO    ] dify_api: 发送聊天请求到 http://1.92.133.173/v1/chat-messages: 用户=test_user_001, 流式输出=False, 文件数量=0
+2025-08-04 14:24:00 [INFO    ] dify_api: 发送请求到: http://1.92.133.173/v1/chat-messages
+2025-08-04 14:24:12 [INFO    ] dify_api: 请求耗时: 11.898秒
+2025-08-04 14:24:12 [INFO    ] dify_api: 成功接收响应

@@ -1,0 +1,6 @@
+2025-08-02 15:22:59 [INFO    ] dify_api: 开始测试Dify API日志
+2025-08-02 15:22:59 [WARNING ] dify_api: API错误: [400] 无效的请求参数 (1.234s) [logger:267]
+2025-08-02 15:22:59 [ERROR   ] dify_api: API错误: [500] 服务器内部错误 (2.345s) [logger:267]
+2025-08-02 15:24:02 [INFO    ] dify_api: 开始测试Dify API日志
+2025-08-02 15:24:02 [WARNING ] dify_api: API错误: [400] 无效的请求参数 (1.234s) [logger:282]
+2025-08-02 15:24:02 [ERROR   ] dify_api: API错误: [500] 服务器内部错误 (2.345s) [logger:282]
