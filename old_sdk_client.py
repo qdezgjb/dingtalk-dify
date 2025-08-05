@@ -11,23 +11,12 @@ import sys
 import requests
 from typing import Optional
 
-# 使用pip安装的alibabacloud-dingtalk SDK
-# 根据钉钉官方文档：https://open.dingtalk.com/document/resourcedownload/download-server-sdk
-# 不需要手动添加路径，直接导入即可
+# 使用钉钉官方API获取unionId
+# 根据钉钉官方文档：https://open.dingtalk.com/document/orgapp/obtain-the-userid-of-a-user-by-using-the-log-free
 
-# 尝试导入SDK
-OLD_SDK_AVAILABLE = False
-try:
-    # 使用新版的alibabacloud-dingtalk SDK
-    from alibabacloud_dingtalk.contact_1_0.client import Client as ContactClient
-    from alibabacloud_dingtalk.contact_1_0.models import GetUserRequest
-    from alibabacloud_tea_openapi.models import Config
-    from alibabacloud_tea_util.models import RuntimeOptions
-    OLD_SDK_AVAILABLE = True
-    print("新版alibabacloud-dingtalk SDK导入成功")
-except ImportError as e:
-    print(f"新版SDK导入失败: {e}")
-    OLD_SDK_AVAILABLE = False
+# SDK可用性检查
+OLD_SDK_AVAILABLE = True
+print("钉钉API SDK可用")
 
 class OldSDKClient:
     def __init__(self, app_key: str, app_secret: str):
@@ -69,25 +58,21 @@ class OldSDKClient:
                 if not self.access_token:
                     return None
             
-            # 使用新版alibabacloud-dingtalk SDK获取用户信息
-            config = Config()
-            config.protocol = "https"
-            config.region_id = "central"
+            # 使用钉钉API直接获取用户信息
+            url = "https://oapi.dingtalk.com/user/get"
+            params = {
+                "access_token": self.access_token,
+                "userid": user_id
+            }
             
-            client = ContactClient(config)
-            request = GetUserRequest()
-            request.userid = user_id
+            response = requests.get(url, params=params, timeout=10)
+            result = response.json()
+            print(f"获取用户信息响应: {result}")
             
-            runtime = RuntimeOptions()
-            
-            # 设置访问令牌
-            response = client.get_user_with_options(request, runtime)
-            print(f"获取用户信息响应: {response}")
-            
-            if response and hasattr(response.body, 'unionid'):
-                return response.body.unionid
+            if result.get("errcode") == 0 and 'unionid' in result:
+                return result['unionid']
             else:
-                print(f"获取用户unionId失败: {response}")
+                print(f"获取用户unionId失败: {result}")
                 return None
                 
         except Exception as e:

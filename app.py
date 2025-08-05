@@ -642,7 +642,7 @@ class CardBotHandler(dingtalk_stream.ChatbotHandler):
                 try:
                     # 根据钉钉官方文档：https://open.dingtalk.com/document/orgapp/obtain-the-userid-of-a-user-by-using-the-log-free
                     # 使用旧版taobao SDK获取unionId
-                    from dingtalk.old_sdk_client import get_union_id_with_old_sdk
+                    from old_sdk_client import get_union_id_with_old_sdk
                     client_id = os.environ.get("DINGTALK_CLIENT_ID")
                     client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
                     
