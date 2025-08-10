@@ -104,3 +104,92 @@ ZeroDivisionError: division by zero
 2025-08-02 15:31:46 [INFO    ] dingtalk_dify_adapter: 成功加载配置文件: config.json
 2025-08-04 10:53:07 [INFO    ] dingtalk_dify_adapter: 成功从环境变量加载配置
 2025-08-04 10:54:24 [INFO    ] dingtalk_dify_adapter: 成功从环境变量加载配置
+2025-08-10 12:44:56 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 12:44:59 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:501]
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:8080
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 12:44:59 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 12:58:01 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: Web日志服务器启动成功，端口: 8080
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 日志系统地址: http://localhost:8080
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: Web日志系统已启动，端口: 8080
+2025-08-10 12:58:04 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:998]
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:8080
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 12:58:04 [INFO    ] dingtalk_dify_adapter: 日志监控地址: http://localhost:8080
+2025-08-10 12:58:06 [INFO    ] dingtalk_dify_adapter: 已自动打开浏览器: http://localhost:8080
+2025-08-10 13:33:13 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: Web日志服务器启动成功，端口: 9000
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 日志系统地址: http://localhost:9000
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: Web日志系统已启动，端口: 9000
+2025-08-10 13:33:15 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:998]
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:9000
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 13:33:15 [INFO    ] dingtalk_dify_adapter: 日志监控地址: http://localhost:9000
+2025-08-10 13:33:18 [INFO    ] dingtalk_dify_adapter: 已自动打开浏览器: http://localhost:9000
+2025-08-10 13:37:34 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: Web日志服务器启动成功，端口: 9002
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 日志系统地址: http://localhost:9002
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: Web日志系统已启动，端口: 9002
+2025-08-10 13:37:36 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:998]
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:9000
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 13:37:36 [INFO    ] dingtalk_dify_adapter: 日志监控地址: http://localhost:9002
+2025-08-10 13:37:39 [INFO    ] dingtalk_dify_adapter: 已自动打开浏览器: http://localhost:9002
+2025-08-10 13:38:30 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: Web日志服务器启动成功，端口: 9001
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 日志系统地址: http://localhost:9001
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: Web日志系统已启动，端口: 9001
+2025-08-10 13:38:33 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:998]
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:9000
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 13:38:33 [INFO    ] dingtalk_dify_adapter: 日志监控地址: http://localhost:9001
+2025-08-10 13:38:35 [INFO    ] dingtalk_dify_adapter: 已自动打开浏览器: http://localhost:9001
+2025-08-10 15:18:38 [INFO    ] dingtalk_dify_adapter: 正在应用SSL修复...
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: SSL修复完成: 7/7 项成功
+2025-08-10 15:18:41 [WARNING ] dingtalk_dify_adapter: Dify API连接测试失败，但继续启动... [app:506]
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 使用模块化处理器
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 使用ChatbotMessage.TOPIC注册处理器
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 启动钉钉-Dify流式适配器 - 统一版...
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 服务器地址: 0.0.0.0:9000
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: Dify API: http://1.92.133.173/v1
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 处理器类型: 模块化
+2025-08-10 15:18:41 [INFO    ] dingtalk_dify_adapter: 支持的消息类型: 文本、图片、语音、文件
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 扩展信息: {'content': {'spaceId': '27020232106', 'fileName': '八大思维导图(22).docx', 'downloadCode': '6oR8P4YsdQ54d+tLk5l5Stg4YBMtLC8nvNo89Ovqy1WsrSJm0Aak80a7eRDAG4OR39Ds0xEKqWmX5G1D6gxup0KlPD5J96ZU2OYzit21rawAq4ViXsZtwDA5uAxY/fe5x/b1GQ2ZEf+0OHYFj9TmVzflJlNRJ7mHg9vf40QlG4Ip0G62GwMlsBEmGwv7hOyT+AhiegqH3F7NEuwhT4ZV/niE7uPGXWSpkeg6qYT7OG0=', 'fileId': '189556369152'}}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 从content字段提取文件信息: {'spaceId': '27020232106', 'fileName': '八大思维导图(22).docx', 'downloadCode': '6oR8P4YsdQ54d+tLk5l5Stg4YBMtLC8nvNo89Ovqy1WsrSJm0Aak80a7eRDAG4OR39Ds0xEKqWmX5G1D6gxup0KlPD5J96ZU2OYzit21rawAq4ViXsZtwDA5uAxY/fe5x/b1GQ2ZEf+0OHYFj9TmVzflJlNRJ7mHg9vf40QlG4Ip0G62GwMlsBEmGwv7hOyT+AhiegqH3F7NEuwhT4ZV/niE7uPGXWSpkeg6qYT7OG0=', 'fileId': '189556369152'}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 成功提取文件信息: {'name': '八大思维导图(22).docx', 'size': 0, 'type': 'document', 'spaceId': '27020232106', 'downloadCode': '6oR8P4YsdQ54d+tLk5l5Stg4YBMtLC8nvNo89Ovqy1WsrSJm0Aak80a7eRDAG4OR39Ds0xEKqWmX5G1D6gxup0KlPD5J96ZU2OYzit21rawAq4ViXsZtwDA5uAxY/fe5x/b1GQ2ZEf+0OHYFj9TmVzflJlNRJ7mHg9vf40QlG4Ip0G62GwMlsBEmGwv7hOyT+AhiegqH3F7NEuwhT4ZV/niE7uPGXWSpkeg6qYT7OG0=', 'fileId': '189556369152'}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 扩展信息: {'fileName': 'test.docx', 'size': 1024, 'type': 'document'}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 成功提取文件信息: {'name': 'test.docx', 'size': 1024, 'type': 'document', 'spaceId': None, 'downloadCode': None, 'fileId': None}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 扩展信息: {"content": {"spaceId": "12345", "fileName": "test.txt", "fileId": "67890"}}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 从content字段提取文件信息: {'spaceId': '12345', 'fileName': 'test.txt', 'fileId': '67890'}
+2025-08-10 15:36:55 [INFO    ] dingtalk_dify_adapter: 成功提取文件信息: {'name': 'test.txt', 'size': 0, 'type': 'text', 'spaceId': '12345', 'downloadCode': None, 'fileId': '67890'}
+2025-08-10 15:36:55 [WARNING ] dingtalk_dify_adapter: 无法从消息中提取有效的文件信息 [file_handler:154]

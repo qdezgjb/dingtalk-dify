@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   dingtalk-dify-adapter:
@@ -6,10 +6,40 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: dingtalk-dify-adapter-stream
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./logs:/app/logs
+      - ./config:/app/config:ro
     env_file:
       - .env
     environment:
-      - TZ=Asia/Shanghai 
+      - TZ=Asia/Shanghai
+      - SERVER_ENV=true
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "9000:9000"
+    networks:
+      - dingtalk-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "ps", "aux", "|", "grep", "python app.py", "|", "grep", "-v", "grep"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  dingtalk-network:
+    driver: bridge 

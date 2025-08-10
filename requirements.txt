@@ -1,22 +1,20 @@
 # 核心依赖
-requests>=2.27.1
+requests>=2.28.0
 dingtalk-stream>=0.24.2
-python-dotenv==0.19.0
-sseclient-py==1.7.2
+python-dotenv>=0.19.0
+sseclient-py>=1.7.2
 
-# 钉钉Storage SDK (支持1.0和2.0版本)
+# 钉钉官方SDK
 alibabacloud-dingtalk>=2.2.27
 alibabacloud-tea-openapi>=0.4.0
 alibabacloud-tea-util>=0.3.13
 
-# 钉钉API支持 (使用requests直接调用钉钉API)
-# 根据钉钉官方文档：https://open.dingtalk.com/document/orgapp/obtain-the-userid-of-a-user-by-using-the-log-free
-
-# 日志和工具类
+# 工具类
 pytz>=2022.1
-colorama>=0.4.4  # 用于Windows终端颜色支持
+colorama>=0.4.4  # Windows终端颜色支持
 typing-extensions>=4.1.1
 
-# 安全相关
+# SSL和安全
 pyOpenSSL>=20.0.1
-certifi>=2021.10.8 
+certifi>=2021.10.8
+urllib3>=1.26.0 

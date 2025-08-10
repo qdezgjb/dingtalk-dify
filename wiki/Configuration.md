@@ -17,7 +17,7 @@
     "app_type": "chat"
   },
   "adapter": {
-    "port": 8080,
+    "port": 9000,
     "timeout": 60,
     "stream_mode": "ai_card"
   }
@@ -34,7 +34,7 @@
 | `DIFY_API_BASE` | Dify API基础URL | https://api.dify.ai/v1 |
 | `DIFY_API_KEY` | Dify应用的API密钥 | - |
 | `DIFY_APP_TYPE` | Dify应用类型 (chat或completion) | chat |
-| `SERVER_PORT` | 服务端口 | 8080 |
+| `SERVER_PORT` | 服务端口 | 9000 |
 | `SESSION_TIMEOUT` | 会话超时时间(秒) | 60 |
 | `STREAM_MODE` | 流式输出模式 (ai_card或text) | ai_card |
 

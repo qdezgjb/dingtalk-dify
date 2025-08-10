@@ -8,8 +8,7 @@ import urllib3
 from typing import Dict, Any, List, Optional
 from requests.adapters import HTTPAdapter
 from .auth import DingTalkAuth, create_custom_ssl_context
-# 修改导入路径，使用相对导入
-# 将项目根目录添加到模块搜索路径
+# 修复导入路径，使用相对导入
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.logger import dingtalk_logger, log_request, log_response
 
